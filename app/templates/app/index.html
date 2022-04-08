@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>商品列表</title>
+
+</head>
+<body>
+{% if response %}
+    <ul>
+    {% for p in response %}
+        <li><a href="/app/product_details/{{p.id}}">{{ p.product_name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+</body>
+</html>
