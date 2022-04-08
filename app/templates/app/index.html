@@ -10,7 +10,7 @@
 {% if response %}
     <ul>
     {% for p in response %}
-        <li><a href="/app/product_details/{{p.id}}">{{ p.product_name }}</a></li>
+        <li><a href="{% url 'app:product_details' p.id %}">{{ p.product_name }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
