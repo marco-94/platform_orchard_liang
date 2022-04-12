@@ -4,18 +4,42 @@
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>商品列表</title>
+    <style type="text/css">
+        table, th, td{
+            margin: 0 auto;
+            border: 1px black solid;
+            width: 20%;
+            height: 20%;
+            text-align: center;
+        }
+    </style>
 
 </head>
 <body>
+<table>
+<tr>
+    <th>商品ID</th>
+    <th>商品名称</th>
+    <th>商品价格</th>
+    <th>商品描述</th>
+    <th>操作</th>
+</tr>
 {% if response %}
     <ul>
-    {% for p in response %}
-        <li><a href="{% url 'app:product_details' p.id %}">{{ p.product_name }}</a></li>
+
+        {% for p in response %}
+        <tr>
+            <td>{{ p.product_id }}</td>
+            <td>{{ p.product_name }}</td>
+            <td>{{ p.product_price }}</td>
+            <td>{{ p.product_description }}</td>
+            <td><a href="{% url 'app:product_details' p.id %}">查看详情</a></td>
+        </tr>
     {% endfor %}
     </ul>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
-
+</table>
 </body>
 </html>
