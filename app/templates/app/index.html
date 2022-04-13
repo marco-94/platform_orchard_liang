@@ -4,19 +4,17 @@
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>商品列表</title>
-    <style type="text/css">
-        table, th, td{
-            margin: 0 auto;
-            border: 1px black solid;
-            width: 20%;
-            height: 20%;
-            text-align: center;
-        }
-    </style>
-
+    <link href="../../static/css/base.css" rel="stylesheet">
+    <link href="../../static/css/index.css" rel="stylesheet">
 </head>
 <body>
-<table>
+<div>
+    <h2 align="center">商品列表</h2>
+   <a class="el-button el-button--primary el-button--small" href="{% url 'app:add_product' %}">添加商品</a><br><br>
+</div>
+<div>
+<table align="left">
+<thead>
 <tr>
     <th>商品ID</th>
     <th>商品名称</th>
@@ -24,22 +22,26 @@
     <th>商品描述</th>
     <th>操作</th>
 </tr>
+</thead>
 {% if response %}
-    <ul>
-
         {% for p in response %}
         <tr>
             <td>{{ p.product_id }}</td>
             <td>{{ p.product_name }}</td>
             <td>{{ p.product_price }}</td>
             <td>{{ p.product_description }}</td>
-            <td><a href="{% url 'app:product_details' p.id %}">查看详情</a></td>
+            <td>
+                <a class="el-button el-button--default el-button--small" href="{% url 'app:product_details' p.id %}">商品详情</a>
+                <a class="el-button el-button--default el-button--small" href="{% url 'app:product_details' p.id %}">编辑商品</a>
+                <a class="el-button el-button--default el-button--small" href="{% url 'app:product_details' p.id %}">删除商品</a>
+
+            </td>
         </tr>
     {% endfor %}
-    </ul>
 {% else %}
-    <p>No polls are available.</p>
+    <p>No app are available.</p>
 {% endif %}
 </table>
+</div>
 </body>
 </html>
