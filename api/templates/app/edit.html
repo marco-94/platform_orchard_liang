@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% load static %}
+    <link type="text/css" href="{% static 'css/base.css' %}"  rel="stylesheet">
+    <link type="text/css" href="{% static 'css/index.css' %}"  rel="stylesheet">
+    <title>编辑商品</title>
+</head>
+<body>
+<div style="width: 400px; margin: 0 auto">
+    <h2>编辑商品</h2>
+    <form action="{% url 'api:edit_save_product' %}" method="post">
+        {% csrf_token %}
+        <div>
+            <label for="transType" class="el-form-item__label" style="width: 110px;">商品ID：</label>
+            <div>
+                <input type="text" style="background-color: #9d9d9d; width: 200px" autocomplete="off" class="el-input__inner" name="product_id" value={{ product_obj.product_id }} readonly="readonly">
+            </div>
+        </div>
+        <div>
+            <label for="transType" class="el-form-item__label" style="width: 110px;">商品名称：</label>
+            <div>
+                <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner" name="product_name" value={{ product_obj.product_name }}>
+            </div>
+        </div>
+        <div>
+            <label for="transType" class="el-form-item__label" style="width: 110px;">商品价格：</label>
+            <div>
+                <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner" name="product_price" value={{ product_obj.product_price }}>
+            </div>
+        </div>
+        <div>
+            <label for="transType" class="el-form-item__label" style="width: 110px;">商品描述：</label>
+            <div>
+                <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner" name="product_description" value={{ product_obj.product_description }}>
+            </div>
+        </div>
+        <div>
+            <br>
+            <input class="el-button el-button--primary el-button--small" type="submit" value="保存"/>
+        </div>
+    </form>
+    {% if result %}
+        <script language="javascript" type="text/javascript">
+                alert('{{ result }}');
+                {#两种重定向方式，返回到列表#}
+                window.location.href = "{% url 'api:product_list' %}";
+                {#setTimeout('location.href="{% url 'api:product_list' %}"', 3)#}
+            </script>
+    {% endif %}
+</div>
+</body>
+</html>

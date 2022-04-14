@@ -9,8 +9,6 @@ class ProductList(models.Model):
     product_name = models.CharField(max_length=30, help_text="商品名称")
     product_description = models.CharField(max_length=200, help_text="商品描述")
     product_price = models.FloatField(max_length=10, help_text="商品价格")
-    create_time = models.DateTimeField().auto_now_add
-    update_time = models.DateTimeField().auto_now
     pub_date = models.DateTimeField('date published')
 
     # 指定数据库表信息
@@ -27,8 +25,6 @@ class ProductDetails(models.Model):
     # 商品id、详情
     product = models.ForeignKey(ProductList, on_delete=models.CASCADE)
     product_details = models.CharField(max_length=500, help_text="商品详情")
-    create_time = models.DateTimeField().auto_now_add
-    update_time = models.DateTimeField().auto_now
     pub_date = models.DateTimeField('date published')
 
     # 指定数据库表信息
