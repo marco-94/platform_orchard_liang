@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui@2.15.8/lib/index.js"></script>
     <title>商品列表</title>
     {% load static %}
-    <link type="text/css" href="{% static 'css/base.css' %}"  rel="stylesheet">
-    <link type="text/css" href="{% static 'css/index.css' %}"  rel="stylesheet">
+    <link type="text/css" href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'css/index.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
 </head>
 <body>
 <div>
@@ -16,10 +19,12 @@
         <div class="el-form-item el-form-item--small">
             <div class="el-form-item__content">
                 <div class="el-input el-input--small">
-                    <input style="width: 200px" autocomplete="off" class="el-input__inner" type="text" name="product_id" placeholder="请输入商品ID" >
-                    <input style="width: 200px" autocomplete="off" class="el-input__inner" type="text" name="product_name" placeholder="请输入商品名称" >
+                    <input style="width: 200px" autocomplete="on" class="el-input__inner" type="text" name="product_id"
+                           placeholder="请输入商品ID" required>
+                    <input style="width: 200px" autocomplete="on" class="el-input__inner" type="text"
+                           name="product_name" placeholder="请输入商品名称" required>
                     <input class="el-button el-button--primary el-button--small" type="submit" value="搜索">
-                    <input class="el-button el-button--primary el-button--small" type="reset" value="重置">
+                    <input onclick="resetInfo()" class="el-button el-button--primary el-button--small" type="reset" value="重置">
                 </div>
             </div>
         </div>
@@ -29,60 +34,99 @@
     <a class="el-button el-button--primary el-button--small" href="{% url 'api:add_product' %}">添加商品</a><br><br>
 </div>
 <div>
-<table align="left">
-<thead>
-<tr>
-    <th>商品ID</th>
-    <th>商品名称</th>
-    <th>商品价格</th>
-    <th>商品描述</th>
-    <th>新增时间</th>
-    <th>操作</th>
-</tr>
-</thead>
-{% if search_data_list %}
-{% for search_data in search_data_list %}
-    <tr>
-            <td>{{ search_data.product_id }}</td>
-            <td>{{ search_data.product_name }}</td>
-            <td>{{ search_data.product_price }}</td>
-            <td>{{ search_data.product_description }}</td>
-            <td>{{ search_data.pub_date }}</td>
-            <td>
-                <a class="el-button el-button--default el-button--small" href="{% url 'api:product_details' search_data.id %}">商品详情</a>
-                <a class="el-button el-button--default el-button--small" href="/api/edit_product/?product_id={{ p.product_id }}">编辑商品</a>
-                <a class="el-button el-button--default el-button--small" href="/api/delete_product/?product_id={{ search_data.product_id }}">删除商品</a>
-
-            </td>
-        </tr>
-{% endfor %}
-{% endif %}
-{% if response %}
-        {% for p in response %}
+    <table align="left">
+        <thead>
         <tr>
-            <td>{{ p.product_id }}</td>
-            <td>{{ p.product_name }}</td>
-            <td>{{ p.product_price }}</td>
-            <td>{{ p.product_description }}</td>
-            <td>{{ p.pub_date }}</td>
-            <td>
-                <a class="el-button el-button--default el-button--small" href="{% url 'api:product_details' p.id %}">商品详情</a>
-                <a class="el-button el-button--default el-button--small" href="/api/edit_product/?product_id={{ p.product_id }}">编辑商品</a>
-                <a class="el-button el-button--default el-button--small" href="/api/delete_product/?product_id={{ p.product_id }}">删除商品</a>
-
-            </td>
+            <th>商品ID</th>
+            <th>商品名称</th>
+            <th>商品价格</th>
+            <th>商品描述</th>
+            <th>新增时间</th>
+            <th>操作</th>
         </tr>
-    {% endfor %}
-{% endif %}
-</table>
-{% if del_result %}
-    <script language="javascript" type="text/javascript">
-        alert('{{ del_result }}');
-        {#两种重定向方式#}
-        window.location.href = "{% url 'api:product_list' %}";
-        {#setTimeout('location.href="{% url 'api:product_list' %}"', 3)#}
-    </script>
-{% endif %}
+        </thead>
+        {% if response %}
+            {% for p in response %}
+                <tr>
+                    <td>{{ p.product_id }}</td>
+                    <td>{{ p.product_name }}</td>
+                    <td>{{ p.product_price }}</td>
+                    <td>{{ p.product_description }}</td>
+                    <td>{{ p.pub_date }}</td>
+                    <td>
+                        <a class="el-button el-button--default el-button--small"
+                           href="{% url 'api:product_details' p.id %}">商品详情</a>
+                        <a class="el-button el-button--default el-button--small"
+                           href="/api/edit_product/?product_id={{ p.product_id }}">编辑商品</a>
+                        <a onclick="return deleteInfo()" class="el-button el-button--default el-button--small"
+                           href="/api/delete_product/?product_id={{ p.product_id }}">删除商品</a>
+
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
+    {% if del_result %}
+        <div role="alert" class="el-message el-message--success" style="top: 20px; z-index: 2027;">
+            <i class="el-message__icon el-icon-success"></i>
+            <p class="el-message__content">{{ del_result }}</p>
+{#            删除之后刷新列表#}
+            <script language="javascript" type="text/javascript">
+                setTimeout('location.href="{% url 'api:product_list' %}"', 1000);
+            </script>
+        </div>
+    {% endif %}
 </div>
+<script>
+    function deleteInfo() {
+        const r = confirm('确定删除此商品？');
+        return r === true;
+    }
+</script>
+{#重置筛选项之后，刷新列表#}
+<script>
+    function resetInfo(){
+        window.location.href = "{% url 'api:product_list' %}";
+    }
+</script>
+<table align="left">
+        <thead>
+        <tr>
+            <th>商品ID</th>
+            <th>商品名称</th>
+            <th>商品价格</th>
+            <th>商品描述</th>
+        </tr>
+        </thead>
+    <tr>
+        <td id="product_id"></td>
+        <td id="product_name"></td>
+        <td id="product_price"></td>
+        <td id="product_description"></td>
+    </tr>
+    </table>
+<script>
+    $(function() {
+        $.ajax({
+        type: "get",
+        contentType: "application/json",
+        url : "http://127.0.0.1:8000/api/product_list_router/",
+        dataType : "json",
+       success : function(data) {
+            var consellorList = data;
+           for (var i = 0; i < consellorList.length; i++) {
+               product_id = consellorList[i]["product_id"]
+           }
+            $("#product_id").html(product_id);
+            {#$("#product_name").html(data.product_name);#}
+            {#$("#product_price").html(data.product_price);#}
+            {#$("#product_description").html(data.product_description);#}
+            {#$("#aaa_aa").append(data)#}
+        }
+
+    });
+    })
+
+</script>
 </body>
 </html>

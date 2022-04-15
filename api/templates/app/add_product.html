@@ -3,62 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
     {% load static %}
-    <link type="text/css" href="{% static 'css/base.css' %}"  rel="stylesheet">
-    <link type="text/css" href="{% static 'css/index.css' %}"  rel="stylesheet">
-    <style>
-        .button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 1px 6px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 5px;
-            border-width: 2px;
-            border-style: groove;
-
-        }
-    </style>
+    <link type="text/css" href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'css/index.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
     <title>新增商品</title>
 </head>
 <body>
-    <div style="width: 400px; margin: 0 auto">
-        <form action="{% url 'api:insert_product' %}" method="post">
-            {% csrf_token %}
-<table>
-        <tr>
-            <label for="transType" class="el-form-item__label" style="width: 110px;">商品id：</label>
-            <input style="width: 200px" autocomplete="off" class="el-input__inner" type="text" name="product_id" placeholder="请输入商品ID"/>
-        </tr>
-        <tr>
-            <label for="transType" class="el-form-item__label" style="width: 110px;">商品名称：</label>
-            <input style="width: 200px" autocomplete="off" class="el-input__inner" type="text" name="product_name" placeholder="请输入商品名称"/>
-        </tr>
-        <tr>
-            <label for="transType" class="el-form-item__label" style="width: 110px;">商品价格：</label>
-            <input style="width: 200px" autocomplete="off" class="el-input__inner" type="text" name="product_price" placeholder="请输入商品价格"/>
-        </tr>
-        <tr>
-            <label for="transType" class="el-form-item__label" style="width: 110px;">商品描述：</label>
-            <input style="width: 200px" autocomplete="off" class="el-input__inner" type="text" name="product_description" placeholder="请输入商品描述"/>
-        </tr>
+<div style="width: 400px; margin: 0 auto">
+    <form action="{% url 'api:insert_product' %}" method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <label for="transType" class="el-form-item__label" style="width: 110px;">商品id：</label>
+                <input style="width: 200px" autocomplete="off" class="el-input__inner" type="text" name="product_id"
+                       placeholder="请输入商品ID"/>
+            </tr>
+            <tr>
+                <label for="transType" class="el-form-item__label" style="width: 110px;">商品名称：</label>
+                <input style="width: 200px" autocomplete="off" class="el-input__inner" type="text" name="product_name"
+                       placeholder="请输入商品名称"/>
+            </tr>
+            <tr>
+                <label for="transType" class="el-form-item__label" style="width: 110px;">商品价格：</label>
+                <input style="width: 200px" autocomplete="off" class="el-input__inner" type="text" name="product_price"
+                       placeholder="请输入商品价格"/>
+            </tr>
+            <tr>
+                <label for="transType" class="el-form-item__label" style="width: 110px;">商品描述：</label>
+                <input style="width: 200px" autocomplete="off" class="el-input__inner" type="text"
+                       name="product_description" placeholder="请输入商品描述"/>
+            </tr>
             <div>
                 <br>
                 <input class="el-button el-button--primary el-button--small" type="submit" value="添加"/>
                 <input class="el-button el-button--primary el-button--small" type="reset" value="重置"/>
                 <a class="el-button el-button--primary el-button--small" href="{% url 'api:product_list' %}">返回</a>
             </div>
-</table>
-</form>
-        {% if result %}
-            <script language="javascript" type="text/javascript">
-                alert('{{ result }}');
-                {#两种重定向方式#}
-                window.location.href = "{% url 'api:product_list' %}";
-                {#setTimeout('location.href="{% url 'api:product_list' %}"', 3)#}
-            </script>
-        {% endif %}
-    </div>
+        </table>
+    </form>
+    {% if result %}
+        <script>
+            toastr.success('{{ result }}');
+            setTimeout('location.href="{% url 'api:product_list' %}"', 1000);
+        </script>
+    {% endif %}
+</div>
 </body>
 </html>

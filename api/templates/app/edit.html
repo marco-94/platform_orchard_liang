@@ -6,6 +6,7 @@
     {% load static %}
     <link type="text/css" href="{% static 'css/base.css' %}"  rel="stylesheet">
     <link type="text/css" href="{% static 'css/index.css' %}"  rel="stylesheet">
+    <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
     <title>编辑商品</title>
 </head>
 <body>
@@ -42,14 +43,16 @@
             <input class="el-button el-button--primary el-button--small" type="submit" value="保存"/>
         </div>
     </form>
-    {% if result %}
-        <script language="javascript" type="text/javascript">
-                alert('{{ result }}');
-                {#两种重定向方式，返回到列表#}
-                window.location.href = "{% url 'api:product_list' %}";
-                {#setTimeout('location.href="{% url 'api:product_list' %}"', 3)#}
-            </script>
-    {% endif %}
 </div>
+    {% if result %}
+        <div role="alert" class="el-message el-message--success" style="top: 20px; z-index: 2027;">
+        <i class="el-message__icon el-icon-success"></i>
+        <p class="el-message__content">{{ result }}</p>
+        <script language="javascript" type="text/javascript">
+            setTimeout('location.href="{% url 'api:product_list' %}"', 3)
+        </script>
+    </div>
+    {% endif %}
+
 </body>
 </html>

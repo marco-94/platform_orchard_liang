@@ -1,11 +1,14 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, JsonResponse
 from api.models import ProductList, ProductDetails
-from django.template import loader
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Q
-import time
+from django.views import View
+from rest_framework import viewsets
+from api.serializers import ProductListSerializer
+
+
+# from api.serializers import ProductDetailsSerializer
 
 
 # Create your views here.
@@ -25,19 +28,6 @@ def product_details(request, product_id):
 def add_product(request):
     return render(request, 'app/add_product.html')
 
-
-# def insert_product(request):
-#     # result = ""
-#     if request.method == 'POST' and request.POST:
-#         list_data = ProductList()
-#         list_data.product_id = request.POST["product_id"]
-#         list_data.product_name = request.POST["product_name"]
-#         list_data.product_price = request.POST["product_price"]
-#         list_data.product_description = request.POST["product_description"]
-#         list_data.pub_date = timezone.now()
-#         list_data.save()
-#         # result = 'success'
-#     return redirect(reverse('api:product_list'))
 
 def insert_product(request):
     result = ""
@@ -63,7 +53,7 @@ def search_product(request):
         search_data_list = ProductList.objects.filter(product_id=product_id, product_name=product_name)
     else:
         search_data_list = ProductList.objects.all()
-    return render(request, 'app/index.html', {'error_msg': error_msg, 'search_data_list': search_data_list})
+    return render(request, 'app/index.html', {'error_msg': error_msg, 'response': search_data_list})
 
 
 def edit_product(request):
@@ -80,15 +70,7 @@ def edit_product(request):
 def edit_save_product(request):
     result = ""
     if request.method == 'POST' and request.POST:
-        # 两种修改方法
         product_id = request.POST.get('product_id', None)
-        # product_name = request.POST.get('product_name', None)
-        # product_price = request.POST.get('product_price', None)
-        # product_description = request.POST.get('product_description', None)
-        # ProductList.objects.filter(product_id=product_id).update(product_id=product_id,
-        #                                                          product_name=product_name,
-        #                                                          product_price=product_price,
-        #                                                          product_description=product_description)
         product = dict(
             product_id=request.POST.get('product_id', None),
             product_name=request.POST.get('product_name', None),
@@ -109,3 +91,22 @@ def delete_product(request):
         return render(request, 'app/index.html', {'del_result': del_result})
     else:
         return HttpResponse("商品不存在")
+
+
+class ProductListView(viewsets.ModelViewSet):
+    queryset = ProductList.objects.all()
+    serializer_class = ProductListSerializer
+
+
+# class ProductDetailsView(viewsets.ModelViewSet):
+#     queryset = ProductDetails.objects.all()
+#     serializer_class = ProductDetailsSerializer
+
+class PdList(View):
+    def get_pd(self, request):
+        pd_all = ProductList.objects.all()
+        pd_list = []
+        for pd in pd_all:
+            pd_list.append({'product_id': pd.product_id, 'product_name': pd.product_name,
+                            'product_description': pd.product_description, 'product_price': pd.product_price})
+        return JsonResponse(pd_list, safe=False)
