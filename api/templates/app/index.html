@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
-    <script src="https://unpkg.com/element-ui@2.15.8/lib/index.js"></script>
+    <script src="../../static/js/jquery-3.6.0.min.js"></script>
+    <script src="../../static/js/jquery-3.0.6.js"></script>
     <title>商品列表</title>
     {% load static %}
     <link type="text/css" href="{% static 'css/base.css' %}" rel="stylesheet">
@@ -88,45 +87,6 @@
     function resetInfo(){
         window.location.href = "{% url 'api:product_list' %}";
     }
-</script>
-<table align="left">
-        <thead>
-        <tr>
-            <th>商品ID</th>
-            <th>商品名称</th>
-            <th>商品价格</th>
-            <th>商品描述</th>
-        </tr>
-        </thead>
-    <tr>
-        <td id="product_id"></td>
-        <td id="product_name"></td>
-        <td id="product_price"></td>
-        <td id="product_description"></td>
-    </tr>
-    </table>
-<script>
-    $(function() {
-        $.ajax({
-        type: "get",
-        contentType: "application/json",
-        url : "http://127.0.0.1:8000/api/product_list_router/",
-        dataType : "json",
-       success : function(data) {
-            var consellorList = data;
-           for (var i = 0; i < consellorList.length; i++) {
-               product_id = consellorList[i]["product_id"]
-           }
-            $("#product_id").html(product_id);
-            {#$("#product_name").html(data.product_name);#}
-            {#$("#product_price").html(data.product_price);#}
-            {#$("#product_description").html(data.product_description);#}
-            {#$("#aaa_aa").append(data)#}
-        }
-
-    });
-    })
-
 </script>
 </body>
 </html>

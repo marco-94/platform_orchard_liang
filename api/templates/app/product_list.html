@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../static/js/jquery-3.6.0.min.js"></script>
+    <script src="../../static/js/jquery-3.0.6.js"></script>
+    <title>商品列表</title>
+    <link type="text/css" href="../../static/css/base.css" rel="stylesheet">
+    <link type="text/css" href="../../static/css/index.css" rel="stylesheet">
+</head>
+<body>
+<div>
+    <h2 style="text-align: center">商品列表</h2>
+    <!--搜索列表-->
+    <div class="el-form-item el-form-item--small">
+        <div class="el-form-item__content">
+            <div class="el-input el-input--small">
+                <input style="width: 200px"
+                       class="el-input__inner"
+                       type="text"
+                       name="product_id"
+                       placeholder="请输入商品ID"
+                       id="product_id" required>
+
+                <input style="width: 200px"
+                       class="el-input__inner"
+                       type="text"
+                       name="product_name"
+                       placeholder="请输入商品名称"
+                       id="product_name" required>
+
+                <input class="el-button el-button--primary el-button--small" type="submit" id="submit" value="搜索">
+                <input class="el-button el-button--primary el-button--small" type="reset" id="reset" value="重置">
+            </div>
+        </div>
+    </div>
+    <!--操作按钮列-->
+    <div style="height: 50px">
+        <a class="el-button el-button--primary el-button--small" href="add_product.html">添加商品</a>
+    </div>
+</div>
+<div>
+    <table style="float: left">
+        <thead>
+        <tr>
+            <th>商品ID</th>
+            <th>商品名称</th>
+            <th>商品价格</th>
+            <th>商品描述</th>
+            <th>新增时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="test"></tbody>
+    </table>
+</div>
+
+<script>
+    function search() {
+        let product_id = $("#product_id").val()
+        let product_name = $("#product_name").val()
+        $.ajax({
+            type: "get",
+            contentType: "application/json",
+            url: "http://127.0.0.1:8000/api/product_list_router/",
+            dataType: "json",
+            data: {"product_id": product_id, "product_name": product_name},
+            success: function (data) {
+                let data_list = data;
+                let str1 = "";
+                for (let i = 0; i < data_list.length; i++) {
+                    str1 += "<tr cate-id='0' fid='0'>" +
+                        "<td>" + data_list[i].product_id + "</td>" +
+                        "<td>" + data_list[i].product_name + "</td>" +
+                        "<td>" + data_list[i].product_price + "</td>" +
+                        "<td>" + data_list[i].product_description + "</td>" +
+                        "<td>" + data_list[i].create_time + "</td>" +
+                        "<td>" + '<a class="el-button el-button--default el-button--small" href="details.html">商品详情</a>' +
+                        '<a class="el-button el-button--default el-button--small" href="edit.html">编辑商品</a>' +
+                        '<a onclick="deleteInfo()" class="el-button el-button--default el-button--small" href="">删除商品</a>' + "</td>";
+                }
+                test.innerHTML = str1;
+               //  $("#test").innerHTML.append(str1)
+            },
+            error: function () {
+                alert("加载数据失败");
+            }
+
+        });
+    }
+
+    // 进入页面，默认加载全部数据
+    $(function () {
+        search()
+    });
+    // 搜索数据
+    $("#submit").click(function () {
+        search()
+    });
+    // 重置查询，清空输入框内容，加载全部数据
+    $("#reset").click(function () {
+        $("#product_id").val("")
+        $("#product_name").val("")
+        search()
+    });
+</script>
+<script>
+    function deleteInfo() {
+        const r = confirm('确定删除此商品？');
+        return r === true;
+    }
+</script>
+</body>
+</html>

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'api.apps.AppConfig',
     'rest_framework',
     'corsheaders',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -77,6 +78,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'orchard_liang.wsgi.application'
 
+#定义异常返回的路径脚本位置
+
+REST_FRAMEWORK = {
+  'EXCEPTION_HANDLER': 'common.utils.custom_execption.custom_exception_handler',
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -95,7 +101,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '123456',
         'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'PORT': '3316',
     }
 }
 
