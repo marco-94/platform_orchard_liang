@@ -20,7 +20,9 @@
                        type="text"
                        name="product_id"
                        placeholder="请输入商品ID"
-                       id="product_id" required>
+                       id="product_id"
+                       onafterpaste="this.value=this.value.replace(/D/g,'')"
+                       onkeyup="this.value=this.value.replace(/\D/g,'')" required>
 
                 <input style="width: 200px"
                        class="el-input__inner"
@@ -43,12 +45,28 @@
     <table style="float: left">
         <thead>
         <tr>
-            <th>商品ID</th>
-            <th>商品名称</th>
-            <th>商品价格</th>
-            <th>商品描述</th>
-            <th>新增时间</th>
-            <th>操作</th>
+            <th class="el-table_2_column_12  is-center   is-leaf el-table__cell">
+                <div>
+                    商品ID
+                </div>
+            </th>
+            <th class="el-table_2_column_12  is-center   is-leaf el-table__cell">
+                <div>商品名称</div>
+            </th>
+            <th class="el-table_2_column_12  is-center   is-leaf el-table__cell">
+                <div>商品价格</div>
+            </th>
+            <th class="el-table_2_column_12  is-center   is-leaf el-table__cell">
+                <div>商品描述</div>
+            </th>
+            <th class="el-table_2_column_12  is-center   is-leaf el-table__cell">
+                <div>
+                    新增时间
+                </div>
+            </th>
+            <th class="el-table_2_column_12  is-center   is-leaf el-table__cell">
+                <div>操作</div>
+            </th>
         </tr>
         </thead>
         <tbody id="test"></tbody>
@@ -57,8 +75,8 @@
 
 <script>
     function search() {
-        let product_id = $("#product_id").val()
-        let product_name = $("#product_name").val()
+        let product_id = $("#product_id").val();
+        let product_name = $("#product_name").val();
         $.ajax({
             type: "get",
             contentType: "application/json",
@@ -66,7 +84,7 @@
             dataType: "json",
             data: {"product_id": product_id, "product_name": product_name},
             success: function (data) {
-                let data_list = data;
+                let data_list = data.data.list;
                 let str1 = "";
                 for (let i = 0; i < data_list.length; i++) {
                     str1 += "<tr cate-id='0' fid='0'>" +
@@ -99,8 +117,8 @@
     });
     // 重置查询，清空输入框内容，加载全部数据
     $("#reset").click(function () {
-        $("#product_id").val("")
-        $("#product_name").val("")
+        $("#product_id").val("");
+        $("#product_name").val("");
         search()
     });
 </script>

@@ -78,10 +78,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'orchard_liang.wsgi.application'
 
-#定义异常返回的路径脚本位置
-
+# 定义异常返回的路径脚本位置
 REST_FRAMEWORK = {
-  'EXCEPTION_HANDLER': 'common.utils.custom_execption.custom_exception_handler',
+  'EXCEPTION_HANDLER': 'api.common.exception.custom_exception_handler',
+  'DEFAULT_RENDERER_CLASSES': ('api.common.render_response.CustomerRenderer',),
+  'DEFAULT_PAGINATION_CLASS': 'api.common.page_number.PageNumber',
 }
 
 # Database
@@ -101,7 +102,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '123456',
         'HOST': '127.0.0.1',
-        'PORT': '3316',
+        'PORT': '3306',
     }
 }
 

@@ -1,17 +1,16 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from api.models import ProductList, ProductDetails
 from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Q
-from django.views import View
+from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from django_filters import rest_framework
 from api.serializers import ProductListSerializer, ProductDetailsSerializer
 from api.filter import ProductListFilter
-from rest_framework.generics import ListAPIView
+from api.common.page_number import PageNumber
 
 
 # from api.serializers import ProductDetailsSerializer
@@ -110,24 +109,19 @@ class ProductListView(viewsets.ModelViewSet):
 class ProductDetailsView(viewsets.ModelViewSet):
     queryset = ProductDetails.objects.all()
     serializer_class = ProductDetailsSerializer
+    pagination_class = PageNumber
     filter_backends = (rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,)
     ordering = ['-pub_date']
 
 
-class PdList(ListAPIView):
+class PdList(APIView):
     def get_pd(self, request):
-        pd_all = ProductList.objects.all()
-        serializer = ProductListSerializer(pd_all, many=True)
-        pd_list = []
-        for pd in pd_all:
-            pd_list.append({'product_id': pd.product_id,
-                            'product_name': pd.product_name,
-                            'product_description': pd.product_description,
-                            'product_price': pd.product_price
-                            })
-        response = {"data": serializer.data, "total": len(serializer.data)}
-        # return JsonResponse(response, safe=False)
-        return Response(response)
+        if request.method == "GET":
+            pd_all = ProductList.objects.all()
+            pd_product_list = PageNumber()
+            pd_obj = pd_product_list.paginate_queryset(queryset=pd_all, request=request, view=self)
+            serializer = ProductListSerializer(pd_obj, many=True)
+            return Response(serializer.data)
 
     def get_pd_details(self, request):
         pd_details_all = ProductDetails.objects.all()
