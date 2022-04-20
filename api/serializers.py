@@ -8,6 +8,8 @@ class ProductListSerializer(serializers.ModelSerializer):
                                             format="%Y-%m-%d %H:%M:%S",
                                             required=False,
                                             read_only=True)
+    # 设置字段必填/非必填
+    pub_date = serializers.DateTimeField(required=False)
 
     class Meta:
         model = ProductList

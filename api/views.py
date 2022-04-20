@@ -13,9 +13,6 @@ from api.filter import ProductListFilter
 from api.common.page_number import PageNumber
 
 
-# from api.serializers import ProductDetailsSerializer
-
-
 # Create your views here.
 def product_list(request):
     response = ProductList.objects.all()
@@ -115,7 +112,7 @@ class ProductDetailsView(viewsets.ModelViewSet):
 
 
 class PdList(APIView):
-    def get_pd(self, request):
+    def get_product_list(self, request, *args, **kwargs):
         if request.method == "GET":
             pd_all = ProductList.objects.all()
             pd_product_list = PageNumber()
@@ -123,6 +120,27 @@ class PdList(APIView):
             serializer = ProductListSerializer(pd_obj, many=True)
             return Response(serializer.data)
 
-    def get_pd_details(self, request):
-        pd_details_all = ProductDetails.objects.all()
-        pd_details = []
+    @staticmethod
+    def create_product(request, *args, **kwargs):
+        if request.method == "POST":
+            serializer = ProductListSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+            return Response(serializer.data)
+
+    @staticmethod
+    def update_product(request, pk):
+        if request.method == "PUT":
+            product = ProductList.objects.filter(pk=pk).first()
+            serializer = ProductListSerializer(data=request.data, instance=product)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+            return Response(serializer.data)
+
+    # def delete_product(self, request, pk):
+    #     if request.method == "DELETE":
+
+
+    # def get_pd_details(self, request):
+    #     pd_details_all = ProductDetails.objects.all()
+    #     pd_details = []

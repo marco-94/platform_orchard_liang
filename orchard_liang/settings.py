@@ -84,6 +84,14 @@ REST_FRAMEWORK = {
   'DEFAULT_RENDERER_CLASSES': ('api.common.render_response.CustomerRenderer',),
   'DEFAULT_PAGINATION_CLASS': 'api.common.page_number.PageNumber',
 }
+CORS_ALLOW_METHODS = (
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
+)
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

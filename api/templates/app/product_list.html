@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <script src="../../static/js/jquery-3.6.0.min.js"></script>
     <script src="../../static/js/jquery-3.0.6.js"></script>
-    <title>商品列表</title>
     <link type="text/css" href="../../static/css/base.css" rel="stylesheet">
     <link type="text/css" href="../../static/css/index.css" rel="stylesheet">
+    <title>商品列表</title>
 </head>
 <body>
 <div>
@@ -31,6 +31,20 @@
                        placeholder="请输入商品名称"
                        id="product_name" required>
 
+                <input style="width: 200px"
+                       class="el-input__inner"
+                       type="text"
+                       name="product_price"
+                       placeholder="请输入商品价格"
+                       id="product_price" required>
+
+                <input style="width: 200px"
+                       class="el-input__inner"
+                       type="text"
+                       name="product_description"
+                       placeholder="请输入商品描述"
+                       id="product_description" required>
+
                 <input class="el-button el-button--primary el-button--small" type="submit" id="submit" value="搜索">
                 <input class="el-button el-button--primary el-button--small" type="reset" id="reset" value="重置">
             </div>
@@ -41,8 +55,8 @@
         <a class="el-button el-button--primary el-button--small" href="add_product.html">添加商品</a>
     </div>
 </div>
-<div>
-    <table style="float: left">
+<div style="width: 100%">
+    <table style="float: left; width: 100%">
         <thead>
         <tr>
             <th class="el-table_2_column_12  is-center   is-leaf el-table__cell">
@@ -72,17 +86,42 @@
         <tbody id="test"></tbody>
     </table>
 </div>
+<div class="fr el-pagination" style="position:fixed; bottom:0; float: right; right: 0;">
+    <button type="button" disabled="disabled" class="btn-prev"><
+        <i class="el-icon el-icon-arrow-left"></i>
+    </button>
+    <ul class="el-pager">
+        <li class="number active">1</li>
+        <li class="number">2</li>
+        <li class="number">3</li>
+        <li class="number">4</li>
+        <li class="number">5</li>
+        <li class="number">6</li>
+        <li class="el-icon more btn-quicknext el-icon-more"></li>
+        <li class="number">9</li>
+    </ul>
+    <button type="button" class="btn-next">
+        <i class="el-icon el-icon-arrow-right"></i>
+    </button>
+</div>
 
 <script>
     function search() {
         let product_id = $("#product_id").val();
         let product_name = $("#product_name").val();
+        let product_price = $("#product_price").val();
+        let product_description = $("#product_description").val();
         $.ajax({
             type: "get",
             contentType: "application/json",
             url: "http://127.0.0.1:8000/api/product_list_router/",
             dataType: "json",
-            data: {"product_id": product_id, "product_name": product_name},
+            data: {
+                "product_id": product_id,
+                "product_name": product_name,
+                "product_price": product_price,
+                "product_description": product_description
+            },
             success: function (data) {
                 let data_list = data.data.list;
                 let str1 = "";
@@ -93,18 +132,37 @@
                         "<td>" + data_list[i].product_price + "</td>" +
                         "<td>" + data_list[i].product_description + "</td>" +
                         "<td>" + data_list[i].create_time + "</td>" +
-                        "<td>" + '<a class="el-button el-button--default el-button--small" href="details.html">商品详情</a>' +
-                        '<a class="el-button el-button--default el-button--small" href="edit.html">编辑商品</a>' +
+                        "<td>" + '<a class="el-button el-button--default el-button--small" href="product_details.html">商品详情</a>' +
+                        '<a class="el-button el-button--default el-button--small" href="product_edit.html">编辑商品</a>' +
                         '<a onclick="deleteInfo()" class="el-button el-button--default el-button--small" href="">删除商品</a>' + "</td>";
                 }
                 test.innerHTML = str1;
-               //  $("#test").innerHTML.append(str1)
             },
             error: function () {
                 alert("加载数据失败");
             }
 
         });
+    }
+
+    function details() {
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg); //匹配目标参数
+            if (r != null) return unescape(r[2]);
+            return null; //返回参数值
+        }
+        var id = getUrlParam('id');
+        $.ajax({
+            type: "get",
+            contentType: "application/json",
+            url: "http://127.0.0.1:8000/api/product_list_router/?id=" + id,
+            dataType: "jsonp",
+            success : function(data) {
+
+            }
+
+        })
     }
 
     // 进入页面，默认加载全部数据
@@ -119,6 +177,8 @@
     $("#reset").click(function () {
         $("#product_id").val("");
         $("#product_name").val("");
+        $("#product_price").val("");
+        $("#product_description").val("");
         search()
     });
 </script>
