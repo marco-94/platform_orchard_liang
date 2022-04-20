@@ -9,7 +9,61 @@
     <title>商品详情</title>
 </head>
 <body>
-<input class="el-button el-button--primary el-button--small" type="button" name="Submit" onclick="history.back();" value="返回">
+<div class="basis-info-item"><b>基本信息</b></div>
+<div class="el-row" style="margin-left: -5px; margin-right: -5px;">
+    <div class="form-item-label label-title el-col el-col-3" style="padding-left: 5px; padding-right: 5px;">基本属性</div>
+    <div class="el-col el-col-20" style="padding-left: 5px; padding-right: 5px;">
+        <div class="mb10 el-row">
+            <div el-col el-col-8>
+                <span class="form-item-label">商品ID：</span>
+                <span class="item-info" id="product_id"></span>
+            </div>
+            <div el-col el-col-8>
+                <span class="form-item-label">商品名称：</span>
+                <span class="item-info" id="product_name"></span>
+            </div>
+            <div el-col el-col-8>
+                <span class="form-item-label">商品价格：</span>
+                <span class="item-info" id="product_price"></span>
+            </div>
+            <div el-col el-col-8>
+                <span class="form-item-label">商品描述：</span>
+                <span class="item-info" id="product_description"></span>
+            </div>
+        </div>
+    </div>
 
+</div>
+<div style="text-align:center; vertical-align:middle;">
+    <input class="el-button el-button--primary el-button--small" type="button" onclick="history.back();" value="返回">
+</div>
+<script>
+        $(function details() {
+            function getUrlParam(name) {
+                let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+                let r = window.location.search.substr(1).match(reg); //匹配目标参数
+                if (r != null) return unescape(r[2]);
+                return null; //返回参数值
+            }
+
+            let id = getUrlParam('id');
+            $.ajax({
+                type: "get",
+                contentType: "application/json",
+                url: "http://127.0.0.1:8000/api/product_list_router/" + id + "/",
+                dataType: "json",
+                success: function (data) {
+                    let data_details = data.data;
+                        $("#product_id").html(data_details.product_id);
+                        $("#product_name").html(data_details.product_name);
+                        $("#product_price").html(data_details.product_price);
+                        $("#product_description").html(data_details.product_description);
+                },
+                error: function () {
+                    alert("加载数据失败");
+                }
+            })
+    })
+</script>
 </body>
 </html>

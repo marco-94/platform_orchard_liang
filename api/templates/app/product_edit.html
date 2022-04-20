@@ -11,48 +11,103 @@
 <body>
 <div style="width: 400px; margin: 0 auto">
     <h2>编辑商品</h2>
-    <form action="{% url 'api:edit_save_product' %}" method="post">
+    <div>
+        <label for="transType" class="el-form-item__label" style="width: 110px;">id：</label>
         <div>
-            <label for="transType" class="el-form-item__label" style="width: 110px;">商品ID：</label>
-            <div>
-                <input type="text" style="background-color: #9d9d9d; width: 200px" autocomplete="off" class="el-input__inner" name="product_id" value={{ product_obj.product_id }} readonly="readonly">
-            </div>
+            <input type="text" style="background-color: #9d9d9d; width: 200px" autocomplete="off"
+                   class="el-input__inner" id="key_id" readonly="readonly">
         </div>
+    </div>
+    <div>
+        <label for="transType" class="el-form-item__label" style="width: 110px;">商品ID：</label>
         <div>
-            <label for="transType" class="el-form-item__label" style="width: 110px;">商品名称：</label>
-            <div>
-                <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner" name="product_name" value={{ product_obj.product_name }}>
-            </div>
+            <input type="text" style="background-color: #9d9d9d; width: 200px" autocomplete="off"
+                   class="el-input__inner" id="product_id" readonly="readonly">
         </div>
+    </div>
+    <div>
+        <label for="transType" class="el-form-item__label" style="width: 110px;">商品名称：</label>
         <div>
-            <label for="transType" class="el-form-item__label" style="width: 110px;">商品价格：</label>
-            <div>
-                <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner" name="product_price" value={{ product_obj.product_price }}>
-            </div>
+            <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner" id="product_name">
         </div>
+    </div>
+    <div>
+        <label for="transType" class="el-form-item__label" style="width: 110px;">商品价格：</label>
         <div>
-            <label for="transType" class="el-form-item__label" style="width: 110px;">商品描述：</label>
-            <div>
-                <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner" name="product_description" value={{ product_obj.product_description }}>
-            </div>
+            <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner" id="product_price">
         </div>
+    </div>
+    <div>
+        <label for="transType" class="el-form-item__label" style="width: 110px;">商品描述：</label>
         <div>
-            <br>
-            <input class="el-button el-button--primary el-button--small" type="submit" value="保存"/>
-            <input class="el-button el-button--primary el-button--small" type="button" name="Submit" onclick="history.back();" value="返回">
+            <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner"
+                   id="product_description">
         </div>
-    </form>
+    </div>
+    <div>
+        <br>
+        <input class="el-button el-button--primary el-button--small" type="submit" id="update" value="保存"/>
+        <input class="el-button el-button--primary el-button--small" type="button" onclick="history.back();"
+               value="返回">
+    </div>
 </div>
 <script>
+    $(function info() {
+        function getUrlParam(name) {
+            let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            let r = window.location.search.substr(1).match(reg); //匹配目标参数
+            if (r != null) return unescape(r[2]);
+            return null; //返回参数值
+        }
+
+        let id = getUrlParam('id');
+        $.ajax({
+            type: "get",
+            contentType: "application/json",
+            url: "http://127.0.0.1:8000/api/product_list_router/" + id + "/",
+            dataType: "json",
+            success: function (data) {
+                let data_details = data.data;
+                $("#key_id").val(data_details.id);
+                $("#product_id").val(data_details.product_id);
+                $("#product_name").val(data_details.product_name);
+                $("#product_price").val(data_details.product_price);
+                $("#product_description").val(data_details.product_description);
+            },
+            error: function () {
+                alert("加载数据失败");
+            }
+        })
+    })
+
     function update() {
+        let key_id = $("#key_id").val();
+        let product_id = $("#product_id").val();
+        let product_name = $("#product_name").val();
+        let product_price = $("#product_price").val();
+        let product_description = $("#product_description").val();
         $.ajax({
             type: "put",
             contentType: "application/json",
-            url: "http://127.0.0.1:8000/api/product_list_router/",
+            url: "http://127.0.0.1:8000/api/product_list_router/" + key_id + "/",
             dataType: "json",
-        })
+            data: JSON.stringify({
+                "product_id": product_id,
+                "product_name": product_name,
+                "product_price": product_price,
+                "product_description": product_description
+            }),
+            success: function () {
+                alert("修改成功")
 
+            }
+        })
     }
+
+    // 修改数据
+    $("#update").click(function () {
+        update()
+    });
 </script>
 </body>
 </html>
