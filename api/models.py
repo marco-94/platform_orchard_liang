@@ -11,6 +11,9 @@ class ProductList(models.Model):
     product_description = models.CharField(max_length=200, help_text="商品描述")
     product_price = models.FloatField(max_length=10, help_text="商品价格")
     pub_date = models.DateTimeField('date published', default=timezone.now())
+    is_delete = models.BooleanField(default=False, help_text='逻辑删除')
+    updated_tm = models.DateTimeField(auto_now=True)
+    created_tm = models.DateTimeField(auto_now_add=True)
 
     # 指定数据库表信息
     class Meta:
@@ -18,15 +21,23 @@ class ProductList(models.Model):
         verbose_name = '商品列表'
         verbose_name_plural = verbose_name
 
+    def delete(self, using=None, keep_parents=False):
+        """重写数据库删除方法实现逻辑删除"""
+        self.is_delete = True
+        self.save()
+
     def __str__(self):
         return self.product_name
 
 
 class ProductDetails(models.Model):
     # 商品id、详情
-    product = models.ForeignKey(ProductList, on_delete=models.CASCADE)
+    product_id = models.IntegerField(help_text="商品ID", unique=True)
     product_details = models.CharField(max_length=500, help_text="商品详情")
     pub_date = models.DateTimeField('date published')
+    is_delete = models.BooleanField(default=False, help_text='逻辑删除')
+    updated_tm = models.DateTimeField(auto_now=True)
+    created_tm = models.DateTimeField(auto_now_add=True)
 
     # 指定数据库表信息
     class Meta:

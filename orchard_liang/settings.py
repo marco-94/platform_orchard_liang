@@ -106,7 +106,7 @@ CORS_ALLOW_METHODS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'liang_orchard',
+        'NAME': 'product_orchard',
         'USER': 'root',
         'PASSWORD': '123456',
         'HOST': '127.0.0.1',

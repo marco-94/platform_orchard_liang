@@ -79,6 +79,11 @@
                 </div>
             </th>
             <th class="el-table_2_column_12  is-center   is-leaf el-table__cell">
+                <div>
+                    更新时间
+                </div>
+            </th>
+            <th class="el-table_2_column_12  is-center   is-leaf el-table__cell">
                 <div>操作</div>
             </th>
         </tr>
@@ -87,7 +92,7 @@
     </table>
 </div>
 <div class="fr el-pagination" style="position:fixed; bottom:0; float: right; right: 0;">
-    <button type="button" disabled="disabled" class="btn-prev"><
+    <button type="button" disabled="disabled" class="btn-prev">
         <i class="el-icon el-icon-arrow-left"></i>
     </button>
     <ul class="el-pager">
@@ -103,6 +108,9 @@
     <button type="button" class="btn-next">
         <i class="el-icon el-icon-arrow-right"></i>
     </button>
+    <span class="form-item-label">共</span>
+    <span class="item-info" id="product_total"></span>
+    <span class="form-item-label">条</span>
 </div>
 
 <script>
@@ -125,6 +133,7 @@
             success: function (data) {
                 let data_list = data.data.list;
                 let str1 = "";
+                $("#product_total").html(data.data.total);
                 for (let i = 0; i < data_list.length; i++) {
                     str1 += "<tr cate-id='0' fid='0'>" +
                         "<td>" + data_list[i].product_id + "</td>" +
@@ -132,16 +141,17 @@
                         "<td>" + data_list[i].product_price + "</td>" +
                         "<td>" + data_list[i].product_description + "</td>" +
                         "<td>" + data_list[i].create_time + "</td>" +
+                        "<td>" + data_list[i].update_time + "</td>" +
                         "<td>" + '<a class="el-button el-button--default el-button--small" href="product_details.html?id=' + data_list[i].id + '">商品详情</a>' +
                         '<a class="el-button el-button--default el-button--small" href="product_edit.html?id=' + data_list[i].id + '">编辑商品</a>' +
-                        '<a onclick="deleteInfo()" class="el-button el-button--default el-button--small" href="">删除商品</a>' + "</td>";
+                        '<a  onclick="deleteInfo()" class="el-button el-button--default el-button--small" href="#" >删除商品</a>' + "</td>";
+
                 }
                 test.innerHTML = str1;
             },
             error: function () {
                 alert("加载数据失败");
             }
-
         });
     }
     // 进入页面，默认加载全部数据

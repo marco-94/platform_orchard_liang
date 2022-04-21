@@ -15,14 +15,6 @@ class CustomerRenderer(JSONRenderer):
                 msg = 'success'
                 code = renderer_context["response"].status_code
 
-            # 重新构建返回的JSON字典
-            for key in data:
-                # 判断是否有自定义的异常的字段
-                if key == 'message':
-                    msg = data[key]
-                    data = ''
-                    code = 0
-
             ret = {
                 'msg': msg,
                 'code': code,

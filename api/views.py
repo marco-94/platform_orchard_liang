@@ -11,6 +11,7 @@ from django_filters import rest_framework
 from api.serializers import ProductListSerializer, ProductDetailsSerializer
 from api.filter import ProductListFilter
 from api.common.page_number import PageNumber
+from rest_framework.decorators import action
 
 
 # Create your views here.
@@ -96,7 +97,7 @@ def delete_product(request):
 
 
 class ProductListView(viewsets.ModelViewSet):
-    queryset = ProductList.objects.all()
+    queryset = ProductList.objects.filter(is_delete=0).all()
     serializer_class = ProductListSerializer
     filter_class = ProductListFilter
     filter_backends = (rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
@@ -137,9 +138,12 @@ class PdList(APIView):
                 serializer.save()
             return Response(serializer.data)
 
-    # def delete_product(self, request, pk):
-    #     if request.method == "DELETE":
-
+    @action(methods=['delete'], detail=False)
+    def delete_product(self, request, pk):
+        if request.method == "DELETE":
+            product = ProductList.objects.filter(id=pk).first()
+            if product:
+                product.delete()
 
     # def get_pd_details(self, request):
     #     pd_details_all = ProductDetails.objects.all()

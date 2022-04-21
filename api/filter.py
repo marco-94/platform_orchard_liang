@@ -10,4 +10,4 @@ class ProductListFilter(django_filters.rest_framework.FilterSet):
 
     class Meta:
         model = ProductList
-        fields = ['product_id', 'product_name', 'product_description', 'product_price']
+        fields = '__all__'

@@ -4,16 +4,23 @@ from api.models import ProductList, ProductDetails
 
 class ProductListSerializer(serializers.ModelSerializer):
     # 在返回json中新增字段，数据源指向数据库字段
-    create_time = serializers.DateTimeField(source="pub_date",
+    create_time = serializers.DateTimeField(source="created_tm",
                                             format="%Y-%m-%d %H:%M:%S",
                                             required=False,
                                             read_only=True)
-    # 设置字段必填/非必填
-    pub_date = serializers.DateTimeField(required=False)
+    update_time = serializers.DateTimeField(source="updated_tm",
+                                            format="%Y-%m-%d %H:%M:%S",
+                                            required=False,
+                                            read_only=True)
 
     class Meta:
         model = ProductList
-        fields = '__all__'
+        # 映射全部字段
+        # fields = '__all__'
+        # 映射指定字段
+        # fields = ('id', 'product_id', 'product_name')
+        # 排除字段
+        exclude = ('created_tm', 'updated_tm', 'is_delete', 'pub_date')
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
