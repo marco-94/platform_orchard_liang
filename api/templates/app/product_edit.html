@@ -9,39 +9,43 @@
     <title>编辑商品</title>
 </head>
 <body>
-<div style="width: 400px; margin: 0 auto">
+<div style="width: 600px; margin: 0 auto">
     <h2>编辑商品</h2>
     <div>
-        <label for="transType" class="el-form-item__label" style="width: 110px;">id：</label>
         <div>
-            <input type="text" style="background-color: #9d9d9d; width: 200px" autocomplete="off"
+            <label for="key_id"></label>
+            <input type="hidden" style="background-color: #9d9d9d; width: 400px" autocomplete="off"
                    class="el-input__inner" id="key_id" readonly="readonly">
         </div>
     </div>
     <div>
-        <label for="transType" class="el-form-item__label" style="width: 110px;">商品ID：</label>
+        <label class="el-form-item__label" style="width: 110px;">商品ID：</label>
         <div>
-            <input type="text" style="background-color: #9d9d9d; width: 200px" autocomplete="off"
+            <label for="product_id"></label>
+            <input type="text" style="background-color: #9d9d9d; width: 400px" autocomplete="off"
                    class="el-input__inner" id="product_id" readonly="readonly">
         </div>
     </div>
     <div>
-        <label for="transType" class="el-form-item__label" style="width: 110px;">商品名称：</label>
+        <label class="el-form-item__label" style="width: 110px;">商品名称：</label>
         <div>
-            <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner" id="product_name">
+            <label for="product_name"></label>
+            <input type="text" style="width: 400px" autocomplete="off" class="el-input__inner" id="product_name">
         </div>
     </div>
     <div>
-        <label for="transType" class="el-form-item__label" style="width: 110px;">商品价格：</label>
+        <label class="el-form-item__label" style="width: 110px;">商品价格：</label>
         <div>
-            <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner" id="product_price">
+            <label for="product_price"></label>
+            <input type="text" style="width: 400px" autocomplete="off" class="el-input__inner" id="product_price">
         </div>
     </div>
     <div>
-        <label for="transType" class="el-form-item__label" style="width: 110px;">商品描述：</label>
+        <label class="el-form-item__label" style="width: 110px;">商品描述：</label>
         <div>
-            <input type="text" style="width: 200px" autocomplete="off" class="el-input__inner"
-                   id="product_description">
+            <label for="product_description"></label>
+            <textarea id="product_description" style="width: 400px; min-height: 32px" autocomplete="off"
+                      class="el-input__inner"></textarea>
         </div>
     </div>
     <div>
@@ -78,7 +82,7 @@
                 alert("加载数据失败");
             }
         })
-    })
+    });
 
     function update() {
         let key_id = $("#key_id").val();

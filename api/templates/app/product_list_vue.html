@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品列表</title>
+    <script src="../../static/js/jquery-3.6.0.min.js"></script>
+    <script src="../../static/js/jquery-3.0.6.js"></script>
+    <script src="../../static/js/vue.min.js"></script>
+    <script src="../../static/js/axios.min.js"></script>
+    <script src="../../../portal/src/router/vue-router.js"></script>
+    <link type="text/css" href="../../static/css/base.css" rel="stylesheet">
+    <link type="text/css" href="../../static/css/index.css" rel="stylesheet">
+</head>
+<body>
+<div id="product_list">
+    <div>
+        <h2 style="text-align: center">商品列表</h2>
+        <!--搜索列表-->
+        <div class="el-form-item el-form-item--small">
+            <div class="el-form-item__content">
+                <div class="el-input el-input--small">
+                    <label for="product_id"></label>
+                    <input style="width: 200px"
+                           class="el-input__inner"
+                           type="text"
+                           name="product_id"
+                           placeholder="请输入商品ID"
+                           id="product_id"
+                           onafterpaste="this.value=this.value.replace(/D/g,'')"
+                           onkeyup="this.value=this.value.replace(/\D/g,'')" required>
+
+                    <label for="product_name"></label>
+                    <input style="width: 200px"
+                           class="el-input__inner"
+                           type="text"
+                           name="product_name"
+                           placeholder="请输入商品名称"
+                           id="product_name" required>
+
+                    <label for="product_price"></label>
+                    <input style="width: 200px"
+                           class="el-input__inner"
+                           type="text"
+                           name="product_price"
+                           placeholder="请输入商品价格"
+                           id="product_price" required>
+
+                    <label for="product_description"></label>
+                    <input style="width: 200px"
+                           class="el-input__inner"
+                           type="text"
+                           name="product_description"
+                           placeholder="请输入商品描述"
+                           id="product_description" required>
+
+                    <button class="el-button el-button--primary el-button--small" v-on:click="get_data">搜索</button>
+                    <button class="el-button el-button--default el-button--small">重置</button>
+                </div>
+            </div>
+        </div>
+        <!--操作按钮列-->
+        <div style="height: 50px">
+            <a class="el-button el-button--primary el-button--small" href="add_product.html">添加商品</a>
+        </div>
+    </div>
+    <div>
+        <table style="float: left" cellspacing="0" cellpadding="0" border="0" class="el-table__header">
+            <thead>
+            <tr class="el-table__row">
+                <th class="el-table_2_column_12  is-center   is-leaf el-table__cell" style="width: 200px">
+                    <div>商品ID</div>
+                </th>
+                <th class="el-table_2_column_12  is-center   is-leaf el-table__cell" style="width: 300px">
+                    <div>商品名称</div>
+                </th>
+                <th class="el-table_2_column_12  is-center   is-leaf el-table__cell" style="width: 200px">
+                    <div>商品价格</div>
+                </th>
+                <th class="el-table_2_column_12  is-center   is-leaf el-table__cell" style="width: 450px">
+                    <div>商品描述</div>
+                </th>
+                <th class="el-table_2_column_12  is-center   is-leaf el-table__cell" style="width: 200px">
+                    <div>新增时间</div>
+                </th>
+                <th class="el-table_2_column_12  is-center   is-leaf el-table__cell" style="width: 200px">
+                    <div>更新时间</div>
+                </th>
+                <th class="el-table_2_column_12  is-center   is-leaf el-table__cell" style="width: 300px">
+                    <div>操作</div>
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div v-for="product in data1" class="el-table__body-wrapper is-scrolling-left">
+        <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" style="float: left">
+            <tbody>
+            <tr class="el-table__row">
+                <td rowspan="1" colspan="1" class="el-table_1_column_1   el-table__cell" style="width: 200px">
+                    <div class="cell">
+                        <div>{{product.product_id}}</div>
+                    </div>
+                </td>
+                <td rowspan="1" colspan="1" class="el-table_1_column_1   el-table__cell" style="width: 300px">
+                    <div class="cell">
+                        <div>{{product.product_name}}</div>
+                    </div>
+                </td>
+                <td rowspan="1" colspan="1" class="el-table_1_column_1   el-table__cell" style="width: 200px">
+                    <div class="cell">
+                        <div>{{product.product_price}}</div>
+                    </div>
+                </td>
+                <td rowspan="1" colspan="1" class="el-table_1_column_1   el-table__cell" style="width: 450px">
+                    <div class="cell">
+                        <div>{{product.product_description}}</div>
+                    </div>
+                </td>
+                <td rowspan="1" colspan="1" class="el-table_1_column_1   el-table__cell" style="width: 200px">
+                    <div class="cell">
+                        <div>{{product.create_time}}</div>
+                    </div>
+                </td>
+                <td rowspan="1" colspan="1" class="el-table_1_column_1   el-table__cell" style="width: 200px">
+                    <div class="cell">
+                        <div>{{product.update_time}}</div>
+                    </div>
+                </td>
+                <td rowspan="1" colspan="1" class="el-table_1_column_1   el-table__cell" style="width: 300px">
+                    <a class="el-button el-button--default el-button--small" href="#">商品详情</a>
+                    <a class="el-button el-button--default el-button--small" href="#">编辑商品</a>
+                    <a class="el-button el-button--default el-button--small" href="#">删除商品</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    let vm = new Vue({
+        el: "#product_list",
+        data: {
+            data1: null
+        },
+        methods: {
+            get_data: function () {
+                let product_id = $("#product_id").val();
+                let product_name = $("#product_name").val();
+                let product_price = $("#product_price").val();
+                let product_description = $("#product_description").val();
+                console.log(product_id);
+                axios
+                    .get('http://127.0.0.1:8000/api/product_list_router/', {
+                        params: {
+                            product_id: product_id,
+                            product_name: product_name,
+                            product_price: product_price,
+                            product_description: product_description,
+                        }
+                    })
+                    .then(response => (this.data1 = response.data.data.list))
+                    .catch(function (error) {
+                        console.log(error)
+                    });
+            }
+        },
+        mounted() {
+            this.get_data();
+        }
+    });
+</script>
+</body>
+</html>

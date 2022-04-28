@@ -15,6 +15,7 @@
     <div class="el-form-item el-form-item--small">
         <div class="el-form-item__content">
             <div class="el-input el-input--small">
+                <label for="product_id"></label>
                 <input style="width: 200px"
                        class="el-input__inner"
                        type="text"
@@ -24,6 +25,7 @@
                        onafterpaste="this.value=this.value.replace(/D/g,'')"
                        onkeyup="this.value=this.value.replace(/\D/g,'')" required>
 
+                <label for="product_name"></label>
                 <input style="width: 200px"
                        class="el-input__inner"
                        type="text"
@@ -31,6 +33,7 @@
                        placeholder="请输入商品名称"
                        id="product_name" required>
 
+                <label for="product_price"></label>
                 <input style="width: 200px"
                        class="el-input__inner"
                        type="text"
@@ -38,6 +41,7 @@
                        placeholder="请输入商品价格"
                        id="product_price" required>
 
+                <label for="product_description"></label>
                 <input style="width: 200px"
                        class="el-input__inner"
                        type="text"
@@ -91,27 +95,6 @@
         <tbody id="test"></tbody>
     </table>
 </div>
-<div class="fr el-pagination" style="position:fixed; bottom:0; float: right; right: 0;">
-    <button type="button" disabled="disabled" class="btn-prev">
-        <i class="el-icon el-icon-arrow-left"></i>
-    </button>
-    <ul class="el-pager">
-        <li class="number active">1</li>
-        <li class="number">2</li>
-        <li class="number">3</li>
-        <li class="number">4</li>
-        <li class="number">5</li>
-        <li class="number">6</li>
-        <li class="el-icon more btn-quicknext el-icon-more"></li>
-        <li class="number">9</li>
-    </ul>
-    <button type="button" class="btn-next">
-        <i class="el-icon el-icon-arrow-right"></i>
-    </button>
-    <span class="form-item-label">共</span>
-    <span class="item-info" id="product_total"></span>
-    <span class="form-item-label">条</span>
-</div>
 
 <script>
     function search() {
@@ -154,6 +137,7 @@
             }
         });
     }
+
     // 进入页面，默认加载全部数据
     $(function () {
         search()

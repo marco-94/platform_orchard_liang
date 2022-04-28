@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <script src="../api/static/js/vue.min.js"></script>
+  <script src="../api/static/js/axios.min.js"></script>
+  <script src="./src/router/vue-router.js"></script>
+  <title>portal</title>
+  <style>
+    .class1 {
+      background: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <p>{{product_id}}</p>
+  <p>{{product_name}}</p>
+  <p>{{product_price}}</p>
+  <p>{{product_description}}</p>
+  <p>de: {{product()}}</p>
+  <div v-html="product_description"></div>
+  <label>
+    <input type="checkbox" v-model="is_use">
+  </label>
+  <div v-bind:class="{'class1': is_use}">{{product_name}}</div>
+  <div>{{product_price.split('').reverse().join('')}}</div>
+  <div v-if="is_use">{{product_name}}--{{product_price}}</div>
+  <a v-bind:href="url">百度</a>
+  <label>
+    <input type="text" v-model.lazy="product_description">
+  </label>
+  <div>
+    <button v-on:click="pd">反转</button>
+  </div>
+  <p>{{product_name | capitalize_a | capitalize_b }}</p>
+  <ul>
+    <li v-for="(value, key, index) in data1">
+      {{index+1}}: {{key}}: {{value}}
+    </li>
+  </ul>
+  <New_test></New_test>
+  <New_test1></New_test1>
+  <New_test2 product_name="葡萄"></New_test2>
+  <br>
+  <New_test2 v-bind:product_name="product_id"></New_test2>
+  <br>
+  <New_test2 v-bind:product_name="data1.product_id"></New_test2>
+  <New_test3 v-for="product_id in sites" v-bind:product_id="product_id"></New_test3>
+  <div v-for="site in data2">
+    {{site.product_id}}--{{site.product_name}}
+  </div>
+</div>
+<!-- built files will be auto injected -->
+</body>
+<script type="text/javascript">
+  // 全局组件
+  Vue.component("new_test", {
+    template: '<h1>自定义全局组件!</h1>'
+  });
+  // 局部组件
+  let new_test1 = {
+    template: '<h1>自定义局部组件!</h1>'
+  };
+  // 全局组件，并接受父组件的自定义属性
+  Vue.component("new_test2", {
+    props: ['product_name'],
+    template: '<span>{{product_name}}</span>'
+  });
+  Vue.component("new_test3", {
+    props: ['product_id'],
+    template: '<span>{{product_id.product_id}}--</span>'
+  });
+  let vm = new Vue({
+    el: '#app',
+    components: {
+      'New_test1': new_test1
+    },
+    data: {
+      product_id: 123,
+      product_name: "a级蜂蜜A",
+      product_price: "20.03",
+      product_description: "<h1>纯正蜂蜜</h1>",
+      is_use: false,
+      url: "http://www.baidu.com",
+      data1: {
+        product_id: 345345,
+        product_name: "橘子",
+        product_price: "13.56",
+        product_description: "好甜的橘子",
+      },
+      sites: [
+        {product_id: 123},
+        {product_id: 456},
+        {product_id: 789}
+      ],
+      data2: null
+    },
+    //方法
+    methods: {
+      // 拼接
+      product: function () {
+        return this.product_id + this.product_name;
+      },
+      // 反转
+        pd: function () {
+        this.product_name = this.product_name.split('').reverse().join('');
+      }
+    },
+    // 过滤器
+    filters: {
+      // 首字母变大写
+      capitalize_a: function (value) {
+        if (!value) return '';
+        value = value.toString();
+        return value.charAt(0).toUpperCase() + value.slice(1);
+      },
+      // 首字母变小写
+      capitalize_b: function (value) {
+        if (!value) return '';
+        value = value.toString();
+        return value.charAt(0).toLowerCase() + value.slice(1);
+      }
+    },
+    mounted() {
+      axios
+        .get('http://127.0.0.1:8000/api/product_list_router/')
+        .then(response => (this.data2 = response.data.data.list))
+        .catch(function (error) {
+          console.log(error)
+        });
+    }
+  })
+</script>
+</html>
