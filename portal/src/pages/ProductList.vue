@@ -88,6 +88,9 @@
                 </el-form-item>
               </el-form>
               <div>
+                <el-row>
+                  <el-button type="success" @click="product_add">新增商品</el-button>
+                </el-row>
               </div>
               <el-table :data="tableData">
                 <el-table-column prop="product_id" label="商品ID">
@@ -173,13 +176,20 @@
               "size": this.pages.size,
             }
           })
-          .then(response => (this.tableData = response.data.data.list,
+          .then(response => (
+            this.tableData = response.data.data.list,
               this.pages.total = response.data.data.total,
               this.pages.currentPage = response.data.data.total_page
           ))
           .catch(function (error) {
             console.log(error)
           });
+      },
+      // 跳转新增页面
+      product_add() {
+        this.$router.push({
+          path: '/product_add',
+        })
       },
       // 跳转详情页面
       product_details(row) {

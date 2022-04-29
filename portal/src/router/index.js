@@ -4,6 +4,7 @@ import Home from "../pages/Home.vue";
 import ProductList from '../pages/ProductList.vue'
 import ProductDetails from '../pages/ProductDetails.vue'
 import ProductEdit from '../pages/ProductEdit.vue'
+import productAdd from "../pages/productAdd.vue";
 
 Vue.use(Router);
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/product_edit',
       name: 'product_edit',
       component: ProductEdit,
+    },
+    {
+      path: '/product_add',
+      name: 'product_add',
+      component: productAdd,
     },
   ]
 })

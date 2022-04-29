@@ -101,7 +101,7 @@ class ProductListView(viewsets.ModelViewSet):
     serializer_class = ProductListSerializer
     filter_class = ProductListFilter
     filter_backends = (rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
-    ordering = ['-pub_date']
+    ordering = ['-created_tm']
 
 
 class ProductDetailsView(viewsets.ModelViewSet):
