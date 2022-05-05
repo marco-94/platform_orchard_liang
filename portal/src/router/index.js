@@ -19,6 +19,9 @@ export default new Router({
       path: '/product',
       name: 'product_list',
       component: ProductList,
+      meta: {
+        pagesShow: true
+      }
     },
     {
       path: '/product_details',
