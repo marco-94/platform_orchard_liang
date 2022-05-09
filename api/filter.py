@@ -11,3 +11,21 @@ class ProductListFilter(django_filters.rest_framework.FilterSet):
     class Meta:
         model = ProductList
         fields = '__all__'
+
+
+class UserListFilter(django_filters.rest_framework.FilterSet):
+    user_id = django_filters.NumberFilter(field_name='user_id', lookup_expr='exact')
+    user_name = django_filters.CharFilter(field_name='user_name', lookup_expr='icontains')
+
+    class Meta:
+        model = UserInfo
+        fields = '__all__'
+
+
+class UserRightsFilter(django_filters.rest_framework.FilterSet):
+    user_id = django_filters.NumberFilter(field_name='user_id', lookup_expr='exact')
+    token = django_filters.CharFilter(field_name='token', lookup_expr='icontains')
+
+    class Meta:
+        model = UserRights
+        fields = '__all__'

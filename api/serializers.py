@@ -1,5 +1,35 @@
 from rest_framework import serializers
-from api.models import ProductList, ProductDetails
+from api.models import ProductList, ProductDetails, UserInfo, UserRights
+
+
+class UserInfoSerializer(serializers.ModelSerializer):
+    create_time = serializers.DateTimeField(source="created_tm",
+                                            format="%Y-%m-%d %H:%M:%S",
+                                            required=False,
+                                            read_only=True)
+    update_time = serializers.DateTimeField(source="updated_tm",
+                                            format="%Y-%m-%d %H:%M:%S",
+                                            required=False,
+                                            read_only=True)
+
+    class Meta:
+        model = UserInfo
+        exclude = ('created_tm', 'updated_tm', 'is_delete')
+
+
+class UserRightsSerializer(serializers.ModelSerializer):
+    create_time = serializers.DateTimeField(source="created_tm",
+                                            format="%Y-%m-%d %H:%M:%S",
+                                            required=False,
+                                            read_only=True)
+    update_time = serializers.DateTimeField(source="updated_tm",
+                                            format="%Y-%m-%d %H:%M:%S",
+                                            required=False,
+                                            read_only=True)
+
+    class Meta:
+        model = UserRights
+        exclude = ('created_tm', 'updated_tm')
 
 
 class ProductListSerializer(serializers.ModelSerializer):

@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from api.models import ProductList, ProductDetails
+from api.models import ProductList, ProductDetails, UserInfo, UserRights
 from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Q
@@ -8,10 +8,11 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import filters
 from django_filters import rest_framework
-from api.serializers import ProductListSerializer, ProductDetailsSerializer
-from api.filter import ProductListFilter
+from api.serializers import ProductListSerializer, ProductDetailsSerializer, UserInfoSerializer, UserRightsSerializer
+from api.filter import ProductListFilter, UserListFilter, UserRightsFilter
 from api.common.page_number import PageNumber
 from rest_framework.decorators import action
+import uuid
 
 
 # Create your views here.
@@ -96,6 +97,22 @@ def delete_product(request):
         return HttpResponse("商品不存在")
 
 
+class UserListView(viewsets.ModelViewSet):
+    queryset = UserInfo.objects.filter(is_delete=0).all()
+    serializer_class = UserInfoSerializer
+    filter_class = UserListFilter
+    filter_backends = (rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    ordering = ['-created_tm']
+
+
+class UserRightsView(viewsets.ModelViewSet):
+    queryset = UserRights.objects.filter().all()
+    serializer_class = UserRightsSerializer
+    filter_class = UserRightsFilter
+    filter_backends = (rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    ordering = ['-created_tm']
+
+
 class ProductListView(viewsets.ModelViewSet):
     queryset = ProductList.objects.filter(is_delete=0).all()
     serializer_class = ProductListSerializer
@@ -112,8 +129,45 @@ class ProductDetailsView(viewsets.ModelViewSet):
     ordering = ['-pub_date']
 
 
+class UserView(APIView):
+    def get_user(self, request):
+        if request.method == 'GET':
+            user_all = UserInfo.objects.all()
+            user_list = PageNumber()
+            user_obj = user_list.paginate_queryset(queryset=user_all, request=request, view=self)
+            serializer = UserInfoSerializer(user_obj, many=True)
+            return Response(serializer.data)
+
+    @staticmethod
+    def create_user(request, *args, **kwargs):
+        if request.method == "POST":
+            serializer = UserInfoSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+            return Response(serializer.data)
+
+
+class LoginView(APIView):
+    @staticmethod
+    def login_in(request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = UserInfo.objects.filter(user_name=username, user_psd=password).first()
+        print(user)
+        if request.method == "POST":
+            if user:
+                token = uuid.uuid4()
+                UserRights.objects.update_or_create(default={'token': token}, user=user)
+                return Response({'code': 100, 'msg': '成功', 'token': token})
+            else:
+                return Response({'code': 101, 'msg': '失败，账号错误或密码错误'})
+
+
 class PdList(APIView):
     def get_product_list(self, request, *args, **kwargs):
+        """
+        商品列表信息
+        """
         if request.method == "GET":
             pd_all = ProductList.objects.all()
             pd_product_list = PageNumber()

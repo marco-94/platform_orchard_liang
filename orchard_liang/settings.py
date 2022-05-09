@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -43,7 +42,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'django_filters',
+    'drf_yasg',
+    'rest_framework_swagger',
 ]
+# DEBUG = True
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -54,7 +56,28 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'djdev_panel.middleware.DebugMiddleware',
 ]
+
+SWAGGER_SETTINGS = {
+    # 这里可以用获取到的token来登录
+    'SECURITY_DEFINITIONS': {
+        # 'api_key': {
+        #     'type': 'apiKey',
+        #     'in': 'query',  # token位置在url中
+        #     'name': 'token'  # 验权的字段
+        # }
+        "basic": {
+            'type': 'basic'
+        }
+    },
+    'USE_SESSION_AUTH': False,
+    'JSON_EDITOR': False,  # False，用户可以自己编辑格式，不用按照serializers中的数据添加。True，会有多个输入框，输入serializer对应的字段的值
+}
+
+LOGIN_URL = '/api-auth/login/'  # 关联到drf 默认的登录路由
+LOGOUT_URL = '/api-auth/logout/'
+
 # 支持跨域配置开始
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
@@ -80,9 +103,19 @@ WSGI_APPLICATION = 'orchard_liang.wsgi.application'
 
 # 定义异常返回的路径脚本位置
 REST_FRAMEWORK = {
-  'EXCEPTION_HANDLER': 'api.common.exception.custom_exception_handler',
-  'DEFAULT_RENDERER_CLASSES': ('api.common.render_response.CustomerRenderer',),
-  'DEFAULT_PAGINATION_CLASS': 'api.common.page_number.PageNumber',
+    'EXCEPTION_HANDLER': 'api.common.exception.custom_exception_handler',
+    'DEFAULT_RENDERER_CLASSES': ('api.common.render_response.CustomerRenderer',),
+    'DEFAULT_PAGINATION_CLASS': 'api.common.page_number.PageNumber',
+    'DEFAULT_SCHEMA_CLASS': "rest_framework.schemas.AutoSchema",
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.BasicAuthentication',
+    #     'rest_framework.authentication.SessionAuthentication',
+    # ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    #     'rest_framework.permissions.AllowAny',
+    #     'rest_framework.permissions.IsAdminUser',
+    # ],
 }
 CORS_ALLOW_METHODS = (
     'GET',
@@ -110,10 +143,9 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '123456',
         'HOST': '127.0.0.1',
-        'PORT': '3316',
+        'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -132,7 +164,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -158,7 +189,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

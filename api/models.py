@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
+
 # Create your models here.
 
 
@@ -47,6 +48,37 @@ class ProductDetails(models.Model):
 
     def __str__(self):
         return self.product_details
+
+
+class UserInfo(models.Model):
+    user_id = models.AutoField(help_text="用户ID", primary_key=True)
+    user_name = models.CharField(max_length=128, help_text="用户名")
+    # nickname = models.CharField(max_length=128, help_text="用户昵称")
+    user_psd = models.CharField(max_length=128, help_text="用户密码")
+    is_delete = models.BooleanField(default=False, help_text='逻辑删除')
+    updated_tm = models.DateTimeField(auto_now=True)
+    created_tm = models.DateTimeField(auto_now_add=True)
+
+    # 指定数据库表信息
+    class Meta:
+        db_table = 'user_info'
+        verbose_name = '用户基础信息'
+        verbose_name_plural = verbose_name
+
+
+class UserRights(models.Model):
+    user = models.OneToOneField(help_text="用户ID", to=UserInfo, on_delete=models.DO_NOTHING)
+    user_role = models.IntegerField(help_text="用户角色", choices=((1, 'vip'), (2, 'svip'), (3, 'ssvip')), default=1)
+    user_rights = models.IntegerField(help_text="用户权限", default="")
+    token = models.CharField(max_length=128, help_text="token")
+    updated_tm = models.DateTimeField(auto_now=True)
+    created_tm = models.DateTimeField(auto_now_add=True)
+
+    # 指定数据库表信息
+    class Meta:
+        db_table = 'user_rights'
+        verbose_name = '用户权限信息'
+        verbose_name_plural = verbose_name
 
 
 class TestDemo(models.Model):

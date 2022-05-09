@@ -4,7 +4,10 @@ from . import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
+# router = routers.SimpleRouter()
 router.register('product_list_router', views.ProductListView, basename='')
+# router.register('user', views.UserListView, basename='')
+# router.register('login', views.UserRightsView, basename='')
 # router.register('product_details_router', views.ProductDetailsView, basename='')
 
 
