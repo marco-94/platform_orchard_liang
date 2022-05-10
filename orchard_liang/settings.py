@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -111,12 +112,25 @@ REST_FRAMEWORK = {
     #     'rest_framework.authentication.BasicAuthentication',
     #     'rest_framework.authentication.SessionAuthentication',
     # ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    #     'rest_framework.permissions.AllowAny',
-    #     'rest_framework.permissions.IsAdminUser',
-    # ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.IsAdminUser',
+    ],
 }
+
+# jwt载荷中的有效期设置
+JWT_AUTH = {
+    # token 有效期
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=8),
+    'JWT_ALLOW_REFRESH': True,
+    # 续期有效期（该设置可在24小时内带未失效的token 进行续期）
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(hours=24),
+    # 自定义返回格式，需要手工创建
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'api.utls.jwt_response_payload_handler',
+}
+
 CORS_ALLOW_METHODS = (
     'GET',
     'POST',

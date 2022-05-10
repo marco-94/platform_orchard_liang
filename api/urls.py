@@ -2,12 +2,10 @@ from django.urls import path, re_path
 from django.conf.urls import include
 from . import views
 from rest_framework import routers
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 
 router = routers.DefaultRouter()
-# router = routers.SimpleRouter()
 router.register('product_list_router', views.ProductListView, basename='')
-# router.register('user', views.UserListView, basename='')
-# router.register('login', views.UserRightsView, basename='')
 # router.register('product_details_router', views.ProductDetailsView, basename='')
 
 
@@ -21,5 +19,6 @@ urlpatterns = [
     path('delete_product/', views.delete_product, name="delete_product"),
     path('edit_product/', views.edit_product, name="edit_product"),
     path('edit_save_product/', views.edit_save_product, name="edit_save_product"),
+    path('login/', obtain_jwt_token),
     path('', include(router.urls)),
 ]

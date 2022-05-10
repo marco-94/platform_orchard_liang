@@ -13,6 +13,8 @@ from api.filter import ProductListFilter, UserListFilter, UserRightsFilter
 from api.common.page_number import PageNumber
 from rest_framework.decorators import action
 import uuid
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 # Create your views here.
@@ -114,6 +116,8 @@ class UserRightsView(viewsets.ModelViewSet):
 
 
 class ProductListView(viewsets.ModelViewSet):
+    authentication_classes = (JSONWebTokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
     queryset = ProductList.objects.filter(is_delete=0).all()
     serializer_class = ProductListSerializer
     filter_class = ProductListFilter
@@ -149,18 +153,16 @@ class UserView(APIView):
 
 class LoginView(APIView):
     @staticmethod
-    def login_in(request):
-        username = request.data.get('username')
-        password = request.data.get('password')
+    def post(request):
+        username = request.GET.get("username")
+        password = request.GET.get("password")
         user = UserInfo.objects.filter(user_name=username, user_psd=password).first()
-        print(user)
-        if request.method == "POST":
-            if user:
-                token = uuid.uuid4()
-                UserRights.objects.update_or_create(default={'token': token}, user=user)
-                return Response({'code': 100, 'msg': '成功', 'token': token})
-            else:
-                return Response({'code': 101, 'msg': '失败，账号错误或密码错误'})
+        if user:
+            token = uuid.uuid4()
+            UserRights.objects.update_or_create(default={'token': token}, user=user)
+            return Response({'code': 100, 'msg': '成功', 'token': token})
+        else:
+            return Response({'code': 101, 'msg': '失败，账号错误或密码错误'})
 
 
 class PdList(APIView):

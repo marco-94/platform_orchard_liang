@@ -53,7 +53,7 @@ class ProductDetails(models.Model):
 class UserInfo(models.Model):
     user_id = models.AutoField(help_text="用户ID", primary_key=True)
     user_name = models.CharField(max_length=128, help_text="用户名")
-    # nickname = models.CharField(max_length=128, help_text="用户昵称")
+    nickname = models.CharField(max_length=128, help_text="用户昵称")
     user_psd = models.CharField(max_length=128, help_text="用户密码")
     is_delete = models.BooleanField(default=False, help_text='逻辑删除')
     updated_tm = models.DateTimeField(auto_now=True)

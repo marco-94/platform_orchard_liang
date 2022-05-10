@@ -28,9 +28,9 @@ schema_view = get_schema_view(
         title="API接口文档平台",  # 必传
         default_version='v1',  # 必传
         description="这是一个接口文档",
-        terms_of_service="http://api.zengsijiu.site",
-        contact=openapi.Contact(email="yueyueniao@qq.com"),
-        license=openapi.License(name="BSD License"),
+        terms_of_service="",
+        contact=openapi.Contact(email=""),
+        license=openapi.License(name=""),
     ),
     public=True,
     # permission_classes=(permissions.AllowAny,),   # 权限类
